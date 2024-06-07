@@ -1,4 +1,4 @@
-import axios, { InternalAxiosRequestConfig, AxiosError, AxiosResponse } from '@ohos/axios'
+import axios, { InternalAxiosRequestConfig, AxiosError, AxiosResponse, AxiosRequestConfig } from '@ohos/axios'
 
 interface HttpResponse<T> {
   code: string
@@ -30,4 +30,9 @@ httpInstance.interceptors.response.use((response: AxiosResponse) => {
   return Promise.reject(error)
 })
 
-export { httpInstance , HttpResponse}
+
+function fetchData<T>(config: AxiosRequestConfig): Promise<AxiosResponse<HttpResponse<T>, null>> {
+  return httpInstance<null, AxiosResponse<HttpResponse<T>>, null>(config)
+}
+
+export { httpInstance, HttpResponse, fetchData }
