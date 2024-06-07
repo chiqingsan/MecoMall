@@ -1,12 +1,14 @@
-import { BreakPointKey, BreakPointType } from '@mk/basic/Index'
+import { Log } from '@abner/log'
+import { BreakPointKey, BreakPointType, httpInstance, HttpResponse } from '@mk/basic/Index'
 import { DiscountGoodsComp, DiscountType } from '../components/DiscountGoodsComp'
 import { MkGoods } from '../components/MkGoods'
 import { Banner, CategoryItem, MkGoodsItem, Params } from '../models'
+import { AxiosResponse } from '@ohos/axios'
 
 
 @Component
 export struct HomeView {
-  @StorageProp("topHeight") topHeight:number = 0
+  @StorageProp("topHeight") topHeight: number = 0
   // 轮播图
   @State banners: Banner[] = []
   // 分类
@@ -25,12 +27,12 @@ export struct HomeView {
 
   // 生成模拟数据
   mockData() {
-    this.banners = new Array(6).fill({
-      id: "42",
-      imgUrl: "https://yjy-teach-oss.oss-cn-beijing.aliyuncs.com/meikou/banner/nuandong_sj.png",
-      hrefUrl: "/category/1181622006",
-      type: "1"
-    })
+    // this.banners = new Array(6).fill({
+    //   id: "42",
+    //   imgUrl: "https://yjy-teach-oss.oss-cn-beijing.aliyuncs.com/meikou/banner/nuandong_sj.png",
+    //   hrefUrl: "/category/1181622006",
+    //   type: "1"
+    // })
 
     this.categories = new Array(10).fill({
       id: "1181622001",
@@ -81,6 +83,13 @@ export struct HomeView {
     })
   }
 
+  // 请求接口数据
+  async getData() {
+    const res: AxiosResponse<HttpResponse<Banner[]>> = await httpInstance("/home/banner")
+    Log.info(res)
+    this.banners = res.data.result
+  }
+
   getSpace() {
     return new BreakPointType({
       sm: 14,
@@ -92,6 +101,7 @@ export struct HomeView {
   aboutToAppear(): void {
     // mock数据
     this.mockData()
+    this.getData()
 
   }
 
@@ -176,7 +186,7 @@ export struct HomeView {
             .borderRadius(20)
             .padding({ left: 12 })
           }
-          .padding({ left: 16, right: 16,top:this.topHeight })
+          .padding({ left: 16, right: 16, top: this.topHeight })
         }
         .width('100%')
 
