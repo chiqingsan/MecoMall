@@ -1,5 +1,5 @@
 import { fetchData } from '@mk/basic/Index'
-import { Banner, CategoryItem } from '../models'
+import { ApiResult, Banner, CategoryItem } from '../models'
 
 // 轮播图
 export const getBannerApi = () => {
@@ -12,5 +12,23 @@ export const getBannerApi = () => {
 export const getCategoryApi = () => {
   return fetchData<CategoryItem[]>({
     url: '/home/category/head'
+  })
+}
+
+export const getPreferenceApi = () => {
+  return fetchData<ApiResult>({
+    url: '/hot/preference'
+  })
+}
+
+export const getHotApi = () => {
+  return fetchData<ApiResult>({
+    url: '/hot/inVogue'
+  })
+}
+
+export const getOneApi = () => {
+  return fetchData<ApiResult>({
+    url: '/hot/oneStop'
   })
 }

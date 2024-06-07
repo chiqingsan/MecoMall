@@ -4,7 +4,7 @@ import { DiscountGoodsComp, DiscountType } from '../components/DiscountGoodsComp
 import { MkGoods } from '../components/MkGoods'
 import { Banner, CategoryItem, MkGoodsItem, Params } from '../models'
 import { AxiosResponse } from '@ohos/axios'
-import { getBannerApi, getCategoryApi } from '../apis'
+import { getBannerApi, getCategoryApi, getHotApi, getOneApi, getPreferenceApi } from '../apis'
 
 
 @Component
@@ -93,6 +93,22 @@ export struct HomeView {
     // 分类
     const categoryRes = await getCategoryApi()
     this.categories = categoryRes.data.result
+
+    // 特惠推荐
+    const preRes = await getPreferenceApi()
+    // Log.info(preRes.data.result.subTypes[0].goodsItems.items)
+    this.saleGoods = preRes.data.result.subTypes[0].goodsItems.items
+
+    // 爆款推荐
+    const hotRes = await getHotApi()
+    // Log.info(preRes.data.result.subTypes[0].goodsItems.items)
+    this.hotGoods = hotRes.data.result.subTypes[0].goodsItems.items
+
+    // 一站买全
+    const oneRes = await getOneApi()
+    // Log.info(preRes.data.result.subTypes[0].goodsItems.items)
+    this.oneGoods = oneRes.data.result.subTypes[0].goodsItems.items
+
   }
 
   getSpace() {
