@@ -2,7 +2,7 @@ import { HomeView } from '@mk/home/Index';
 import { CategoryView } from '@mk/category/Index';
 import { CartView } from '@mk/cart/Index';
 import { MyView } from '@mk/my/Index';
-import { Log } from '@abner/log';
+import { BreakPointKey, breakpointSystem, BreakpointSystem, BreakPointType } from '@mk/basic/Index';
 
 interface TabItem {
   text: string
@@ -13,7 +13,7 @@ interface TabItem {
 @Entry
 @Component
 struct Index {
-  @State message: string = 'Hello World';
+  @StorageProp(BreakPointKey) breakPointKey: string = "xs"
   @State activeIndex: number = 0
   list: TabItem[] = [
     { text: '首页', normal: $r('app.media.ic_public_home_normal'), active: $r('app.media.ic_public_home_active') },
@@ -23,18 +23,29 @@ struct Index {
   ]
 
   aboutToAppear(): void {
-    // Log.info(new Object({ name: "chiqingsan", age: 18 }))
+    breakpointSystem.register()
+  }
+
+  aboutToDisappear(): void {
+    breakpointSystem.unregister()
   }
 
   build() {
-    Tabs({ barPosition: BarPosition.End }) {
+    Tabs({
+      barPosition: new BreakPointType({
+        xs: BarPosition.End,
+        sm: BarPosition.End,
+        md: BarPosition.End,
+        lg: BarPosition.Start
+      }).getValue(this.breakPointKey)
+    }) {
       ForEach(this.list, (item: TabItem, index: number) => {
         TabContent() {
-          if (index == 0) {
+          if (index === 0) {
             HomeView()
-          } else if (index == 1) {
+          } else if (index === 1) {
             CategoryView()
-          } else if (index == 2) {
+          } else if (index === 2) {
             CartView()
           } else {
             MyView()
@@ -44,6 +55,12 @@ struct Index {
       })
     }
     .scrollable(false)
+    .vertical(new BreakPointType({
+      xs: false,
+      sm: false,
+      md: false,
+      lg: true
+    }).getValue(this.breakPointKey))
     .onTabBarClick(index => {
       this.activeIndex = index
     })

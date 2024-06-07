@@ -16,6 +16,7 @@ export default class EntryAbility extends UIAbility {
       showLogLocation: true,
       logSize: 1024
     })
+
   }
 
   onDestroy(): void {
