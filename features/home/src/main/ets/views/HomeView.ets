@@ -4,7 +4,7 @@ import { DiscountGoodsComp, DiscountType } from '../components/DiscountGoodsComp
 import { MkGoods } from '../components/MkGoods'
 import { Banner, CategoryItem, MkGoodsItem, Params } from '../models'
 import { AxiosResponse } from '@ohos/axios'
-import { getBannerApi } from '../apis'
+import { getBannerApi, getCategoryApi } from '../apis'
 
 
 @Component
@@ -86,9 +86,13 @@ export struct HomeView {
 
   // 请求接口数据
   async getData() {
+    // banner数据
     const res = await getBannerApi()
-    Log.info(res)
     this.banners = res.data.result
+
+    // 分类
+    const categoryRes = await getCategoryApi()
+    this.categories = categoryRes.data.result
   }
 
   getSpace() {
