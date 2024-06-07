@@ -4,6 +4,7 @@ import { DiscountGoodsComp, DiscountType } from '../components/DiscountGoodsComp
 import { MkGoods } from '../components/MkGoods'
 import { Banner, CategoryItem, MkGoodsItem, Params } from '../models'
 import { AxiosResponse } from '@ohos/axios'
+import { getBannerApi } from '../apis'
 
 
 @Component
@@ -85,7 +86,7 @@ export struct HomeView {
 
   // 请求接口数据
   async getData() {
-    const res: AxiosResponse<HttpResponse<Banner[]>> = await httpInstance("/home/banner")
+    const res = await getBannerApi()
     Log.info(res)
     this.banners = res.data.result
   }
