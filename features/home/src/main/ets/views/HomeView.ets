@@ -1,3 +1,4 @@
+import { BreakPointKey, BreakPointType } from '@mk/basic/Index'
 import { DiscountGoodsComp, DiscountType } from '../components/DiscountGoodsComp'
 import { MkGoods } from '../components/MkGoods'
 import { Banner, CategoryItem, MkGoodsItem, Params } from '../models'
@@ -19,6 +20,7 @@ export struct HomeView {
   @State newGoods: MkGoodsItem[] = []
   // 推荐商品
   @State recommendGoods: MkGoodsItem[] = []
+  @StorageProp(BreakPointKey) breakPointKey: string = "sm"
 
   // 生成模拟数据
   mockData() {
@@ -78,6 +80,14 @@ export struct HomeView {
     })
   }
 
+  getSpace() {
+    return new BreakPointType({
+      sm: 14,
+      md: 36,
+      lg: 72
+    }).getValue(this.breakPointKey) as number
+  }
+
   aboutToAppear(): void {
     // mock数据
     this.mockData()
@@ -128,16 +138,26 @@ export struct HomeView {
               Image(item.imgUrl)
             })
           }
-
+          .displayCount(new BreakPointType({
+            sm: 1,
+            md: 2,
+            lg: 3
+          }).getValue(this.breakPointKey))
+          .itemSpace(new BreakPointType({
+            sm: 0,
+            md: 10,
+            lg: 20
+          }).getValue(this.breakPointKey))
           .indicator(
-            DotIndicator.dot()
+            this.breakPointKey === "sm" ? DotIndicator.dot()
               .itemWidth(8)
               .itemHeight(4)
               .color('#33191919')
               .selectedItemWidth(24)
               .selectedItemHeight(4)
-              .selectedColor('#191919')
+              .selectedColor('#191919') : false
           )
+
 
           Row() {
             Row({ space: 4 }) {
@@ -163,7 +183,7 @@ export struct HomeView {
         // 分类
         Column({ space: 10 }) {
           // 分类
-          List({ space: 16 }) {
+          List({ space: this.getSpace() }) {
             ForEach(this.categories, (item: CategoryItem) => {
               ListItem() {
                 Column() {
@@ -204,7 +224,7 @@ export struct HomeView {
               Image($r('app.media.home_cmd_inner'))
                 .width(86)
                 .height(116)
-              List({ space: 10 }) {
+              List({ space: this.getSpace() }) {
                 ForEach(this.saleGoods, (item: MkGoodsItem) => {
                   ListItem() {
                     DiscountGoodsComp({ goods: item })
@@ -253,7 +273,7 @@ export struct HomeView {
             Image($r('app.media.home_new'))
               .width(146)
               .height(19)
-            List({ space: 10 }) {
+            List({ space: this.getSpace() }) {
               ForEach(this.newGoods, (item: MkGoodsItem) => {
                 ListItem() {
                   DiscountGoodsComp({ type: DiscountType.NEW, goods: item })
@@ -280,7 +300,11 @@ export struct HomeView {
               }
             })
           }
-          .columnsTemplate('1fr 1fr')
+          .columnsTemplate(new BreakPointType({
+            sm: "1fr 1fr",
+            md: "1fr 1fr 1fr",
+            lg: "1fr 1fr 1fr 1fr"
+          }).getValue(this.breakPointKey))
           .columnsGap(8)
           .rowsGap(10)
 
