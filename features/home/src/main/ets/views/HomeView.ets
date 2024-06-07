@@ -2,9 +2,17 @@ import { Log } from '@abner/log'
 import { BreakPointKey, BreakPointType, httpInstance, HttpResponse } from '@mk/basic/Index'
 import { DiscountGoodsComp, DiscountType } from '../components/DiscountGoodsComp'
 import { MkGoods } from '../components/MkGoods'
-import { Banner, CategoryItem, MkGoodsItem, Params } from '../models'
+import { ApiResult, Banner, CategoryItem, MkGoodsItem, Params } from '../models'
 import { AxiosResponse } from '@ohos/axios'
-import { getBannerApi, getCategoryApi, getHotApi, getOneApi, getPreferenceApi } from '../apis'
+import {
+  getBannerApi,
+  getCategoryApi,
+  getHotApi,
+  getNewApi,
+  getOneApi,
+  getPreferenceApi,
+  getRecommendApi
+} from '../apis'
 
 
 @Component
@@ -86,28 +94,31 @@ export struct HomeView {
 
   // 请求接口数据
   async getData() {
+
+    const PromiseArr =
+      [getBannerApi(), getCategoryApi(), getPreferenceApi(), getHotApi(), getOneApi(), getNewApi(), getRecommendApi()]
+    const resArr = await Promise.all(PromiseArr)
+
     // banner数据
-    const res = await getBannerApi()
-    this.banners = res.data.result
+    this.banners = resArr[0].data.result as Banner[]
 
     // 分类
-    const categoryRes = await getCategoryApi()
-    this.categories = categoryRes.data.result
+    this.categories = resArr[1].data.result as CategoryItem[]
 
     // 特惠推荐
-    const preRes = await getPreferenceApi()
-    // Log.info(preRes.data.result.subTypes[0].goodsItems.items)
-    this.saleGoods = preRes.data.result.subTypes[0].goodsItems.items
+    this.saleGoods = (resArr[2].data.result as ApiResult).subTypes[0].goodsItems.items
 
     // 爆款推荐
-    const hotRes = await getHotApi()
-    // Log.info(preRes.data.result.subTypes[0].goodsItems.items)
-    this.hotGoods = hotRes.data.result.subTypes[0].goodsItems.items
+    this.hotGoods = (resArr[3].data.result as ApiResult).subTypes[0].goodsItems.items
 
     // 一站买全
-    const oneRes = await getOneApi()
-    // Log.info(preRes.data.result.subTypes[0].goodsItems.items)
-    this.oneGoods = oneRes.data.result.subTypes[0].goodsItems.items
+    this.oneGoods = (resArr[4].data.result as ApiResult).subTypes[0].goodsItems.items
+
+    // 新鲜好物
+    this.newGoods = resArr[5].data.result as MkGoodsItem[]
+
+    // 推荐列表
+    this.recommendGoods = resArr[6].data.result as MkGoodsItem[]
 
   }
 

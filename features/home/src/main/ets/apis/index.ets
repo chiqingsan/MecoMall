@@ -32,3 +32,15 @@ export const getOneApi = () => {
     url: '/hot/oneStop'
   })
 }
+
+export const getNewApi = () => {
+  return fetchData<ApiResult>({
+    url: '/home/new?limit=10'
+  })
+}
+
+export const getRecommendApi = () => {
+  return fetchData<ApiResult>({
+    url: '/home/recommend?limit=20'
+  })
+}
