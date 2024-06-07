@@ -2,7 +2,7 @@ import { HomeView } from '@mk/home/Index';
 import { CategoryView } from '@mk/category/Index';
 import { CartView } from '@mk/cart/Index';
 import { MyView } from '@mk/my/Index';
-import { BreakPointKey, breakpointSystem, BreakpointSystem, BreakPointType } from '@mk/basic/Index';
+import { BreakPointKey, breakpointSystem, BreakpointSystem, BreakPointType, windowManager } from '@mk/basic/Index';
 
 interface TabItem {
   text: string
@@ -13,6 +13,7 @@ interface TabItem {
 @Entry
 @Component
 struct Index {
+  @StorageProp("bottomHeight") bottomHeight: number = 0
   @StorageProp(BreakPointKey) breakPointKey: string = "xs"
   @State activeIndex: number = 0
   list: TabItem[] = [
@@ -23,6 +24,7 @@ struct Index {
   ]
 
   aboutToAppear(): void {
+    windowManager.enableFullScreen(true)
     breakpointSystem.register()
   }
 
@@ -64,6 +66,7 @@ struct Index {
     .onTabBarClick(index => {
       this.activeIndex = index
     })
+    .padding({ bottom: this.bottomHeight })
   }
 
   @Builder

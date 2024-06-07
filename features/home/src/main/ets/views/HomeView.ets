@@ -6,6 +6,7 @@ import { Banner, CategoryItem, MkGoodsItem, Params } from '../models'
 
 @Component
 export struct HomeView {
+  @StorageProp("topHeight") topHeight:number = 0
   // 轮播图
   @State banners: Banner[] = []
   // 分类
@@ -175,7 +176,7 @@ export struct HomeView {
             .borderRadius(20)
             .padding({ left: 12 })
           }
-          .padding({ left: 16, right: 16 })
+          .padding({ left: 16, right: 16,top:this.topHeight })
         }
         .width('100%')
 
