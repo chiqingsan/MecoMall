@@ -1,4 +1,4 @@
-import { CategoryItem, CategoryItemChild } from '@mk/basic'
+import { CategoryItem, CategoryItemChild, MkNavbar } from '@mk/basic'
 
 @Component
 export struct CategoryView {
@@ -12,10 +12,10 @@ export struct CategoryView {
 
   build() {
     Column() {
-      // MkNavbar({
-      // })
-      //   .border({ width: { bottom: 0.5 }, color: $r('app.color.under') })
-
+      MkNavbar({
+        title: "分类",
+        showRightIcon: true
+      })
       Row() {
         Column() {
           ForEach(this.categories, (item: CategoryItem, i) => {
