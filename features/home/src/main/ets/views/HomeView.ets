@@ -13,6 +13,7 @@ import {
   getPreferenceApi,
   getRecommendApi
 } from '../apis'
+import { promptAction } from '@kit.ArkUI'
 
 
 @Component
@@ -33,6 +34,8 @@ export struct HomeView {
   // 推荐商品
   @State recommendGoods: MkGoodsItem[] = []
   @StorageProp(BreakPointKey) breakPointKey: string = "sm"
+  page: number = 1
+  numberPerPage: number = 8
 
   // 生成模拟数据
   mockData() {
@@ -96,7 +99,8 @@ export struct HomeView {
   async getData() {
 
     const PromiseArr =
-      [getBannerApi(), getCategoryApi(), getPreferenceApi(), getHotApi(), getOneApi(), getNewApi(), getRecommendApi()]
+      [getBannerApi(), getCategoryApi(), getPreferenceApi(), getHotApi(), getOneApi(), getNewApi(),
+        getRecommendApi(this.page * this.numberPerPage)]
     const resArr = await Promise.all(PromiseArr)
 
     // banner数据
@@ -128,6 +132,17 @@ export struct HomeView {
       md: 36,
       lg: 72
     }).getValue(this.breakPointKey) as number
+  }
+
+  // 加载更多
+  async getMore() {
+    if (this.recommendGoods.length <= 30) {
+      this.page++
+      const res = await getRecommendApi(this.page * this.numberPerPage)
+      this.recommendGoods = res.data.result
+    } else {
+      promptAction.showToast({ message: "已经到底啦~" })
+    }
   }
 
   aboutToAppear(): void {
@@ -341,7 +356,7 @@ export struct HomeView {
               FlowItem() {
                 MkGoods({ goods: item })
               }
-            })
+            }, (item: MkGoodsItem) => item.id)
           }
           .columnsTemplate(new BreakPointType({
             sm: "1fr 1fr",
@@ -361,5 +376,8 @@ export struct HomeView {
       }
     }
     .scrollBar(BarState.Off)
+    .onReachEnd(() => {
+      this.getMore()
+    })
   }
 }
