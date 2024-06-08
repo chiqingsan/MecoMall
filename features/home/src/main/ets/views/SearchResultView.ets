@@ -3,6 +3,7 @@ import { router } from '@kit.ArkUI'
 import { MkGoodsItem } from '@mk/basic'
 import { MkGoods } from '../components/MkGoods'
 import { getSearchApi } from '../apis'
+import { PullToRefresh } from "@ohos/pulltorefresh"
 
 // 联合类型
 export type SortField = 'publishTime' | 'orderNum' | 'price'
@@ -144,18 +145,38 @@ export struct SearchResultView {
       .justifyContent(FlexAlign.SpaceBetween)
       .border({ width: { bottom: 0.5 }, color: $r('app.color.border') })
 
-      WaterFlow({ scroller: this.scroller }) {
-        ForEach(this.data, (item: MkGoodsItem) => {
-          FlowItem() {
-            MkGoods({ goods: item, smallImage: true })
-          }
-        })
-      }
-      .columnsTemplate("1fr 1fr")
-      .columnsGap(0.5)
-      .rowsGap(0.5)
-      .layoutWeight(1)
+
+      PullToRefresh({
+        data: $data,
+        scroller: this.scroller,
+        customList: () => {
+          this.myListBuilder()
+        },
+        onRefresh: async () => {
+          this.data = []
+          this.params.page = 1
+          this.queryTheData()
+          return ""
+        }
+      })
+
+
     }
+  }
+
+  @Builder
+  myListBuilder() {
+    WaterFlow({ scroller: this.scroller }) {
+      ForEach(this.data, (item: MkGoodsItem) => {
+        FlowItem() {
+          MkGoods({ goods: item, smallImage: true })
+        }
+      })
+    }
+    .columnsTemplate("1fr 1fr")
+    .columnsGap(0.5)
+    .rowsGap(0.5)
+    .layoutWeight(1)
   }
 }
 
