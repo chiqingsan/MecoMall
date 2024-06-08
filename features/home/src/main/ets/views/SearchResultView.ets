@@ -1,5 +1,5 @@
 import { Log } from '@abner/log'
-import { router } from '@kit.ArkUI'
+import { promptAction, router } from '@kit.ArkUI'
 import { MkGoodsItem } from '@mk/basic'
 import { MkGoods } from '../components/MkGoods'
 import { getSearchApi } from '../apis'
@@ -61,6 +61,7 @@ export struct SearchResultView {
   ]
   // 控制器
   scroller = new Scroller()
+  total: number = 0
 
   aboutToAppear() {
     try {
@@ -80,13 +81,33 @@ export struct SearchResultView {
   async queryTheData() {
     const res = await getSearchApi(this.params)
     this.data = res.data.result.pageData.items
-    Log.info(res)
+    this.total = res.data.result.pageData.counts
+    // Log.info(res)
   }
 
   searchData(value: string) {
     this.params.keyword = value
     this.params.page = 1
     this.queryTheData()
+  }
+
+  // 刷新数据
+  refreshTheData() {
+    this.data = []
+    this.params.page = 1
+    this.queryTheData()
+    return ""
+  }
+
+  // 加载更多
+  async loadMore() {
+    if (this.params.page > this.total) {
+      this.params.page++
+      const res = await getSearchApi(this.params)
+      this.data.push(...res.data.result.pageData.items as MkGoodsItem[])
+    } else {
+      promptAction.showToast({ message: "没有更多数据啦~" })
+    }
   }
 
   build() {
@@ -153,9 +174,11 @@ export struct SearchResultView {
           this.myListBuilder()
         },
         onRefresh: async () => {
-          this.data = []
-          this.params.page = 1
-          this.queryTheData()
+          this.refreshTheData()
+          return ""
+        },
+        onLoadMore: async () => {
+          this.loadMore()
           return ""
         }
       })
