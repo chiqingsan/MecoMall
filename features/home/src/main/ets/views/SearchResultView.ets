@@ -69,15 +69,15 @@ export struct SearchResultView {
       Log.error(e)
     }
     // TODO 查询数据
-    this.queryTheData(this.params)
+    this.queryTheData()
   }
 
   paramsChange() {
     Log.info(this.params)
   }
 
-  async queryTheData(params: SearchParams) {
-    const res = await getSearchApi(params)
+  async queryTheData() {
+    const res = await getSearchApi(this.params)
     this.data = res.data.result.pageData.items
     Log.info(res)
   }
@@ -85,7 +85,7 @@ export struct SearchResultView {
   searchData(value: string) {
     this.params.keyword = value
     this.params.page = 1
-    this.queryTheData(this.params)
+    this.queryTheData()
   }
 
   build() {
@@ -127,7 +127,11 @@ export struct SearchResultView {
             field: item.field,
             sortField: this.params.sortField,
             sortMethod: this.params.sortMethod,
-
+            onClickItem: (sortField: SortField, sortMethod: SortMethod) => {
+              this.params.sortField = sortField
+              this.params.sortMethod = sortMethod
+              this.queryTheData()
+            }
           })
         })
         Text('筛选')
@@ -166,9 +170,20 @@ struct SortItemComp {
   @Prop sortField: SortField = 'publishTime'
   // 父组件的排序方法
   @Prop sortMethod: SortMethod = 'desc'
-
   // TODO 点击筛选条件，回传  sortField 和 sortMethod 给父组件（回调函数）
+  onClickItem = (sortField: SortField, sortMethod: SortMethod) => {
 
+  }
+
+  MyOnClick() {
+    // 排序字段相同,修改排序方式
+    if (this.field == this.sortField) {
+      this.onClickItem(this.field, this.sortMethod == 'asc' ? 'desc' : 'asc')
+    } else {
+      // 排序字段不同，排序方式 desc，修改排序字段
+      this.onClickItem(this.field, 'desc')
+    }
+  }
 
   build() {
     Row() {
@@ -191,7 +206,7 @@ struct SortItemComp {
       .justifyContent(FlexAlign.Center)
     }
     .onClick(() => {
-
+      this.MyOnClick()
     })
   }
 }
