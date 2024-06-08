@@ -1,4 +1,5 @@
 import { BreakPointKey, BreakPointType, CategoryItem, CategoryItemChild, MkNavbar } from '@mk/basic'
+import { router } from '@kit.ArkUI'
 
 @Component
 export struct CategoryView {
@@ -10,7 +11,11 @@ export struct CategoryView {
     Column() {
       MkNavbar({
         title: "分类",
-        showRightIcon: true
+        showRightIcon: true,
+        rightIcon: $r("app.media.ic_public_search"),
+        rightClickHandler: () => {
+          router.pushUrl({ url: "pages/SearchPage" })
+        }
       })
       Row() {
         Column() {

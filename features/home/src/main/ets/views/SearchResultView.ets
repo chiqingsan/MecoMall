@@ -33,7 +33,7 @@ interface RouterParam {
 @Component
 export struct SearchResultView {
   // 顶部安全区域
-  @StorageProp('safeTop') safeTop: number = 0
+  @StorageProp('topHeight') safeTop: number = 0
   // mock 数据
   @State data: MkGoodsItem[] = new Array(8).fill({
     "id": "4033959",
@@ -43,9 +43,7 @@ export struct SearchResultView {
     "payCount": 0
   })
   // 查询参数
-  @State
-  @Watch('paramsChange')
-  params: SearchParams =
+  @State @Watch('paramsChange') params: SearchParams =
     {
       keyword: '',
       sortField: 'publishTime',
@@ -63,8 +61,12 @@ export struct SearchResultView {
   scroller = new Scroller()
 
   aboutToAppear(): void {
-    const params = router.getParams() as RouterParam
-    this.params.keyword = params.keyword
+    try {
+      const params = router.getParams() as RouterParam
+      this.params.keyword = params.keyword
+    } catch (e) {
+      Log.error(e)
+    }
     // TODO 查询数据
   }
 

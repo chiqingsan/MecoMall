@@ -2,7 +2,7 @@ import { router, window } from '@kit.ArkUI'
 
 @Component
 export struct SearchView {
-  @StorageProp('safeTop') safeTop: number = 0
+  @StorageProp('topHeight') safeTop: number = 0
   @State keyword: string = ''
 
   aboutToAppear(): void {
@@ -45,8 +45,13 @@ export struct SearchView {
           .caretStyle({ color: $r('app.color.red') })
           .defaultFocus(true)
           .onSubmit((value) => {
+            router.pushUrl({
+              url: "pages/SearchResultPage",
+              params: {
+                keyword: value
+              }
+            })
           })
-
 
       }
       .padding({ top: this.safeTop, right: 16 })

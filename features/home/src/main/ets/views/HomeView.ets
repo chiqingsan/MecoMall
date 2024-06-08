@@ -13,7 +13,7 @@ import {
   getPreferenceApi,
   getRecommendApi
 } from '../apis'
-import { promptAction } from '@kit.ArkUI'
+import { promptAction, router } from '@kit.ArkUI'
 
 
 @Component
@@ -260,6 +260,9 @@ export struct HomeView {
                 .height(40)
                 .borderRadius(20)
                 .padding({ left: 12 })
+                .onClick(() => {
+                  router.pushUrl({ url: "pages/SearchPage" })
+                })
               }
               .padding({ left: 16, right: 16, top: this.topHeight })
             }
