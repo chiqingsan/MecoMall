@@ -1,13 +1,9 @@
-import { CategoryItem, CategoryItemChild, MkNavbar } from '@mk/basic'
+import { BreakPointKey, BreakPointType, CategoryItem, CategoryItemChild, MkNavbar } from '@mk/basic'
 
 @Component
 export struct CategoryView {
-  //  Mock分类数据
-  categories: CategoryItem[] = new Array(10).fill({
-    id: "1181622001",
-    name: "气质女装",
-    picture: "https://yjy-teach-oss.oss-cn-beijing.aliyuncs.com/meikou/c1/qznz.png"
-  })
+  @StorageProp("categories") categories: CategoryItem[] = []
+  @StorageProp(BreakPointKey) breakPointKey: string = "sm"
   @State activeIndex: number = 0
 
   build() {
@@ -38,23 +34,30 @@ export struct CategoryView {
         Scroll() {
           Column() {
             // 顶部图片
-            Image('https://yjy-teach-oss.oss-cn-beijing.aliyuncs.com/meikou/c1/qznz.png')
+            Image(this.categories[this.activeIndex].picture)
               .width('100%')
-              .height(136)
+              .height(this.breakPointKey === "sm" ? 136 : 316)
               .objectFit(ImageFit.Contain)
               .backgroundColor('#f6f6f6')
               .borderRadius(8)
               .margin({ bottom: 8 })
-            GridRow({ columns: 2, gutter: 8 }) {
+            GridRow({
+              columns: new BreakPointType({
+                sm: 2,
+                md: 3,
+                lg: 4
+              }).getValue(this.breakPointKey)
+            , gutter: 8
+            }) {
               // 子分类
-              ForEach(Array.from({ length: 10 }), (sub: CategoryItemChild) => {
+              ForEach(this.categories[this.activeIndex].children, (sub: CategoryItemChild) => {
                 GridCol() {
                   Column() {
                     // 图片
-                    Image('https://yjy-teach-oss.oss-cn-beijing.aliyuncs.com/meikou/c2/qznz_bq.png?quality=95&imageView')
+                    Image(sub.picture)
                       .width(64)
                       .aspectRatio(1)
-                    Text('半裙')// 文本
+                    Text(sub.name)// 文本
                       .fontSize(14)
                       .fontColor($r('app.color.text'))
                       .margin({ top: 8 })

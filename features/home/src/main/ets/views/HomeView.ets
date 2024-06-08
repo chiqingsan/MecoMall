@@ -126,6 +126,9 @@ export struct HomeView {
     // 推荐列表
     this.recommendGoods = resArr[6].data.result as MkGoodsItem[]
 
+
+    // 保存分类数据,方便其他页面使用
+    AppStorage.setOrCreate("categories", this.categories)
   }
 
   getSpace() {
