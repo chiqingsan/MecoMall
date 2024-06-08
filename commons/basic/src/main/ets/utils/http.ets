@@ -31,8 +31,8 @@ httpInstance.interceptors.response.use((response: AxiosResponse) => {
 })
 
 
-function fetchData<T>(config: AxiosRequestConfig): Promise<AxiosResponse<HttpResponse<T>, null>> {
-  return httpInstance<null, AxiosResponse<HttpResponse<T>>, null>(config)
+function fetchData<T, D = null>(config: AxiosRequestConfig<D>): Promise<AxiosResponse<HttpResponse<T>, null>> {
+  return httpInstance<null, AxiosResponse<HttpResponse<T>>, D>(config)
 }
 
 export { httpInstance, HttpResponse, fetchData }

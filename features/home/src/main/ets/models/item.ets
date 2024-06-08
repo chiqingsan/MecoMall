@@ -54,3 +54,8 @@ export interface GoodsItems {
   pages: number;
   pageSize: number;
 }
+
+export interface SearchResult {
+  // conditions: Conditions;
+  pageData: GoodsItems;
+}

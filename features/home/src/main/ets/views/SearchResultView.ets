@@ -2,6 +2,7 @@ import { Log } from '@abner/log'
 import { router } from '@kit.ArkUI'
 import { MkGoodsItem } from '@mk/basic'
 import { MkGoods } from '../components/MkGoods'
+import { getSearchApi } from '../apis'
 
 // 联合类型
 export type SortField = 'publishTime' | 'orderNum' | 'price'
@@ -60,7 +61,7 @@ export struct SearchResultView {
   // 控制器
   scroller = new Scroller()
 
-  aboutToAppear(): void {
+  aboutToAppear() {
     try {
       const params = router.getParams() as RouterParam
       this.params.keyword = params.keyword
@@ -68,10 +69,23 @@ export struct SearchResultView {
       Log.error(e)
     }
     // TODO 查询数据
+    this.queryTheData(this.params)
   }
 
   paramsChange() {
     Log.info(this.params)
+  }
+
+  async queryTheData(params: SearchParams) {
+    const res = await getSearchApi(params)
+    this.data = res.data.result.pageData.items
+    Log.info(res)
+  }
+
+  searchData(value: string) {
+    this.params.keyword = value
+    this.params.page = 1
+    this.queryTheData(this.params)
   }
 
   build() {
@@ -98,7 +112,7 @@ export struct SearchResultView {
           .height(36)
           .caretStyle({ color: $r('app.color.red') })
           .onSubmit((value) => {
-
+            this.searchData(value)
           })
       }
       .padding({ top: this.safeTop, right: 16 })

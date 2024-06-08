@@ -1,5 +1,6 @@
 import { fetchData } from '@mk/basic/Index'
-import { ApiResult, Banner, CategoryItem, MkGoodsItem } from '../models'
+import { ApiResult, Banner, CategoryItem, MkGoodsItem, SearchResult } from '../models'
+import { SearchParams } from '../views'
 
 // 轮播图
 export const getBannerApi = () => {
@@ -43,5 +44,13 @@ export const getRecommendApi = (limit: number) => {
   return fetchData<MkGoodsItem[]>({
     url: '/home/recommend',
     params: { limit }
+  })
+}
+
+export const getSearchApi = (data: SearchParams) => {
+  return fetchData<SearchResult, SearchParams>({
+    url: '/search/all',
+    method: 'post',
+    data
   })
 }
