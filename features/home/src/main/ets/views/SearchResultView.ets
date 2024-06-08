@@ -1,6 +1,6 @@
 import { Log } from '@abner/log'
 import { promptAction, router } from '@kit.ArkUI'
-import { MkGoodsItem } from '@mk/basic'
+import { MkGoodsItem, MyDataSource } from '@mk/basic'
 import { MkGoods } from '../components/MkGoods'
 import { getSearchApi } from '../apis'
 import { PullToRefresh } from "@ohos/pulltorefresh"
@@ -37,13 +37,7 @@ export struct SearchResultView {
   // 顶部安全区域
   @StorageProp('topHeight') safeTop: number = 0
   // mock 数据
-  @State data: MkGoodsItem[] = new Array(8).fill({
-    "id": "4033959",
-    "name": "3秒快速拆琴轻松保养odin奥丁12半音阶口琴",
-    "price": 329,
-    "picture": "https://yanxuan-item.nosdn.127.net/937a8e46a9284e8f7e00e13911ecfbe7.png",
-    "payCount": 0
-  })
+  @State data: MyDataSource<MkGoodsItem> = new MyDataSource()
   // 查询参数
   @State @Watch('paramsChange') params: SearchParams =
     {
@@ -80,7 +74,10 @@ export struct SearchResultView {
 
   async queryTheData() {
     const res = await getSearchApi(this.params)
-    this.data = res.data.result.pageData.items
+    res.data.result.pageData.items.forEach((item: MkGoodsItem) => {
+      this.data.pushData(item)
+    })
+    // this.data = res.data.result.pageData.items
     this.total = res.data.result.pageData.counts
     // Log.info(res)
   }
@@ -93,7 +90,8 @@ export struct SearchResultView {
 
   // 刷新数据
   refreshTheData() {
-    this.data = []
+    // this.data = []
+    this.data.clear()
     this.params.page = 1
     this.queryTheData()
     return ""
@@ -101,10 +99,13 @@ export struct SearchResultView {
 
   // 加载更多
   async loadMore() {
-    if (this.params.page > this.total) {
+    if (this.params.page < this.total) {
       this.params.page++
       const res = await getSearchApi(this.params)
-      this.data.push(...res.data.result.pageData.items as MkGoodsItem[])
+      res.data.result.pageData.items.forEach((item: MkGoodsItem) => {
+        this.data.pushData(item)
+      })
+      // this.data.push(...res.data.result.pageData.items as MkGoodsItem[])
     } else {
       promptAction.showToast({ message: "没有更多数据啦~" })
     }
@@ -190,11 +191,11 @@ export struct SearchResultView {
   @Builder
   myListBuilder() {
     WaterFlow({ scroller: this.scroller }) {
-      ForEach(this.data, (item: MkGoodsItem) => {
+      LazyForEach(this.data, (item: MkGoodsItem) => {
         FlowItem() {
           MkGoods({ goods: item, smallImage: true })
         }
-      })
+      }, (item: MkGoodsItem) => item.id)
     }
     .columnsTemplate("1fr 1fr")
     .columnsGap(0.5)
