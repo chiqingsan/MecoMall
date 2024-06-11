@@ -1,5 +1,6 @@
 // import { auth, MkUser } from '@mk/basic'
 import { router } from '@kit.ArkUI'
+import { MkGuess } from '@mk/basic/Index'
 
 @Component
 export struct MyView {
@@ -150,8 +151,8 @@ export struct MyView {
           .padding({ left: 8, right: 8 })
 
           // guess
-          // MkGuess()
-          //   .margin({ top: 8, bottom: 8 })
+          MkGuess()
+            .margin({ top: 8, bottom: 8 })
         }
       }
       .scrollBar(BarState.Off)
