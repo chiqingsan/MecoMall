@@ -19,3 +19,11 @@ export interface CategoryItemChild {
   name: string
   picture: ResourceStr
 }
+
+export interface GoodsItems {
+  counts: number;
+  items: MkGoodsItem[];
+  page: number;
+  pages: number;
+  pageSize: number;
+}

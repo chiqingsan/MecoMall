@@ -1,3 +1,4 @@
+import { getGuessLikeApi } from '../apis'
 import { MkGoodsItem } from '../models'
 import { MkGoods } from './MkGoods'
 
@@ -8,8 +9,11 @@ export struct MkGuess {
   @State loading: boolean = false
   limit: number = 8
 
-  aboutToAppear(): void {
+  async aboutToAppear(): Promise<void> {
     this.loading = true
+    const res = await getGuessLikeApi()
+    this.likeGoods = res.data.result.items
+    this.loading = false
   }
 
   build() {
