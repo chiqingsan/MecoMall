@@ -2,13 +2,15 @@ import { HomeView } from '@mk/home/Index';
 import { CategoryView } from '@mk/category/Index';
 import { CartView } from '@mk/cart/Index';
 import { MyView } from '@mk/my/Index';
-import { BreakPointKey, breakpointSystem, BreakPointType, windowManager } from '@mk/basic/Index';
+import { BreakPointKey, breakpointSystem, BreakPointType, MkUser, windowManager } from '@mk/basic/Index';
 
 interface TabItem {
   text: string
   normal: ResourceStr
   active: ResourceStr
 }
+
+PersistentStorage.persistProp("userinfo",{} as MkUser)
 
 @Entry
 @Component
