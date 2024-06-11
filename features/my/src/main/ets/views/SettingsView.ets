@@ -49,8 +49,34 @@ export struct SettingsView {
         MkCellGroup() {
           MkCell({ label: '退出登录', hasBorder: false })
             .onClick(() => {
-              auth.removeUser()
-              router.back()
+              AlertDialog.show(
+                {
+                  title: '退出提醒',
+                  message: '确定要退出登录吗？',
+                  autoCancel: true,
+                  alignment: DialogAlignment.Bottom,
+                  gridCount: 4,
+                  offset: { dx: 0, dy: -20 },
+                  primaryButton: {
+                    value: '取消',
+                    fontColor: $r("app.color.black"),
+                    action: () => {
+                    }
+                  },
+                  secondaryButton: {
+                    enabled: true,
+                    defaultFocus: true,
+                    style: DialogButtonStyle.HIGHLIGHT,
+                    value: '退出登录',
+                    backgroundColor: $r("app.color.black"),
+                    fontColor: $r("app.color.white"),
+                    action: () => {
+                      auth.removeUser()
+                      router.back()
+                    }
+                  }
+                }
+              )
             })
         }
       }
