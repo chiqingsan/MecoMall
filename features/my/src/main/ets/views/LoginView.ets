@@ -1,23 +1,40 @@
-import { MkNavbar } from '@mk/basic/Index'
+import { auth, MkNavbar } from '@mk/basic/Index'
 import { promptAction, router } from '@kit.ArkUI'
+import { LoginApi, loginData } from '../apis'
+import { Log } from '@abner/log'
 
 
 @Component
 export struct LoginView {
-  @State @Watch('onInput') account: string = ''
-  @State @Watch('onInput') password: string = ''
-  @State valid: boolean = false
+  @State @Watch('onInput') account: string = 'zhousg'
+  @State @Watch('onInput') password: string = '123456'
+  @State valid: boolean = true
   @State agree: boolean = false
 
   onInput() {
     this.valid = this.account && this.password ? true : false
   }
 
-  onSubmit() {
+  async onSubmit() {
     if (!this.agree) {
       return promptAction.showToast({ message: '请先勾选协议' })
     }
+    if (!this.valid) {
+      return promptAction.showToast({ message: "请输入账号和密码" })
+    }
 
+    const res = await LoginApi({
+      account: this.account,
+      password: this.password
+    } as loginData)
+
+    Log.info(res.data)
+    if (res.data.code === "1") {
+      auth.saveUser(res.data.result)
+      router.back()
+    } else {
+      promptAction.showToast({ message: "登录出错" })
+    }
   }
 
   @Styles

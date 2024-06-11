@@ -2,7 +2,7 @@ import { HomeView } from '@mk/home/Index';
 import { CategoryView } from '@mk/category/Index';
 import { CartView } from '@mk/cart/Index';
 import { MyView } from '@mk/my/Index';
-import { BreakPointKey, breakpointSystem, BreakPointType, MkUser, windowManager } from '@mk/basic/Index';
+import { auth, BreakPointKey, breakpointSystem, BreakPointType, MkUser, windowManager } from '@mk/basic/Index';
 
 interface TabItem {
   text: string
@@ -10,7 +10,9 @@ interface TabItem {
   active: ResourceStr
 }
 
-PersistentStorage.persistProp("userinfo",{} as MkUser)
+
+// 初始化用户信息
+auth.initialize()
 
 @Entry
 @Component

@@ -39,7 +39,7 @@ export struct CategoryView {
         Scroll() {
           Column() {
             // 顶部图片
-            Image(this.categories[this.activeIndex].picture)
+            Image(this.categories[this.activeIndex]?.picture)
               .width('100%')
               .height(this.breakPointKey === "sm" ? 136 : 316)
               .objectFit(ImageFit.Contain)
@@ -55,7 +55,7 @@ export struct CategoryView {
             , gutter: 8
             }) {
               // 子分类
-              ForEach(this.categories[this.activeIndex].children, (sub: CategoryItemChild) => {
+              ForEach(this.categories[this.activeIndex]?.children, (sub: CategoryItemChild) => {
                 GridCol() {
                   Column() {
                     // 图片

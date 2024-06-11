@@ -8,6 +8,10 @@ export interface MkUser {
 class Auth {
   KEY: string = 'user'
 
+  initialize() {
+    PersistentStorage.persistProp(this.KEY, {} as MkUser)
+  }
+
   getUser() {
     return AppStorage.get<MkUser>(this.KEY) || {} as MkUser
   }

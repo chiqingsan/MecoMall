@@ -1,12 +1,11 @@
 // import { auth, MkUser } from '@mk/basic'
 import { router } from '@kit.ArkUI'
-import { MkGuess } from '@mk/basic/Index'
+import { auth, MkGuess, MkUser } from '@mk/basic/Index'
 
 @Component
 export struct MyView {
   @StorageProp('topHeight') safeTop: number = 0
-
-  // @StorageProp(auth.KEY) user: MkUser = {} as MkUser
+  @StorageProp(auth.KEY) user: MkUser = {} as MkUser
 
   build() {
     Column() {
@@ -26,23 +25,23 @@ export struct MyView {
 
             Row({ space: 16 }) {
               // 头像
-              Image($r('app.media.ic_user_avatar'))
+              Image(this.user.avatar || $r('app.media.ic_user_avatar'))
                 .width(40)
                 .aspectRatio(1)
                 .borderRadius(20)
-              // if (this.user.token) {
-              //   Text(this.user.nickname || this.user.account)
-              //     .fontColor($r('app.color.black'))
-              //     .fontWeight(500)
-              // } else {
-              Text('立即登录')
-                .fontColor($r('app.color.black'))
-                .fontWeight(500)
-                .onClick(() => {
-                  router.pushUrl({ url: 'pages/LoginPage' })
-                })
+              if (this.user.token) {
+                Text(this.user.nickname || this.user.account)
+                  .fontColor($r('app.color.black'))
+                  .fontWeight(500)
+              } else {
+                Text('立即登录')
+                  .fontColor($r('app.color.black'))
+                  .fontWeight(500)
+                  .onClick(() => {
+                    router.pushUrl({ url: 'pages/LoginPage' })
+                  })
+              }
             }
-            // }
             .width('100%')
             .height(72)
 
