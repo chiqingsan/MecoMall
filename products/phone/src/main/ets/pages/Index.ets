@@ -2,7 +2,7 @@ import { HomeView } from '@mk/home/Index';
 import { CategoryView } from '@mk/category/Index';
 import { CartView } from '@mk/cart/Index';
 import { MyView } from '@mk/my/Index';
-import { BreakPointKey, breakpointSystem, BreakpointSystem, BreakPointType, windowManager } from '@mk/basic/Index';
+import { BreakPointKey, breakpointSystem, BreakPointType, windowManager } from '@mk/basic/Index';
 
 interface TabItem {
   text: string

@@ -1,1 +1,2 @@
-export { MyView } from './src/main/ets/views/MyView'
+
+export * from './src/main/ets/views/index'
