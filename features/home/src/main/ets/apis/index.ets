@@ -56,7 +56,7 @@ export const getSearchApi = (data: SearchParams) => {
 }
 
 
-export const getDetailsApi = (id: number) => {
+export const getDetailsApi = (id: string) => {
   return fetchData<Goods>({
     url: '/goods',
     params:{

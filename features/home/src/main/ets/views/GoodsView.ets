@@ -1,6 +1,7 @@
 import { MkGoodsItem, MkGuess, MkNavbar } from '@mk/basic'
 import { router } from '@kit.ArkUI'
 import { Goods } from '../models'
+import { getDetailsApi } from '../apis'
 
 
 @Component
@@ -16,6 +17,8 @@ export struct GoodsView {
   async aboutToAppear() {
     this.goods = router.getParams() as Goods
 
+    const res = await getDetailsApi(this.goods.id)
+    this.goods = res.data.result
   }
 
   @Builder
