@@ -1,7 +1,7 @@
 import { Log } from '@abner/log'
 import { BreakPointKey, BreakPointType, httpInstance, HttpResponse, MkLoading } from '@mk/basic/Index'
 import { DiscountGoodsComp, DiscountType } from '../components/DiscountGoodsComp'
-import { MkGoods } from '../components/MkGoods'
+import { MkGoods } from '@mk/basic/src/main/ets/components/MkGoods'
 import { ApiResult, Banner, CategoryItem, MkGoodsItem, Params } from '../models'
 import { AxiosResponse } from '@ohos/axios'
 import {

@@ -1,7 +1,7 @@
 import { Log } from '@abner/log'
 import { promptAction, router } from '@kit.ArkUI'
 import { MkGoodsItem, MyDataSource } from '@mk/basic'
-import { MkGoods } from '../components/MkGoods'
+import { MkGoods } from '@mk/basic/src/main/ets/components/MkGoods'
 import { getSearchApi } from '../apis'
 import { PullToRefresh } from "@ohos/pulltorefresh"
 
