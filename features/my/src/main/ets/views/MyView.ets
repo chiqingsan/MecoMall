@@ -1,5 +1,5 @@
 // import { auth, MkUser } from '@mk/basic'
-import { router } from '@kit.ArkUI'
+import { promptAction, router } from '@kit.ArkUI'
 import { auth, MkGuess, MkUser } from '@mk/basic/Index'
 
 @Component
@@ -18,6 +18,15 @@ export struct MyView {
               Image($r('app.media.ic_public_settings'))
                 .width(24)
                 .aspectRatio(1)
+                .onClick(() => {
+                  if (this.user.token) {
+                    router.pushUrl({
+                      url: "pages/SettingsPage"
+                    })
+                  } else {
+                    promptAction.showToast({ message: "请先登录" })
+                  }
+                })
 
             }
             .width('100%')
