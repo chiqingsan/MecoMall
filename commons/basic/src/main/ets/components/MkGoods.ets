@@ -1,4 +1,5 @@
 import { MkGoodsItem } from '../models'
+import { router } from '@kit.ArkUI'
 
 @Component
 export struct MkGoods {
@@ -50,5 +51,11 @@ export struct MkGoods {
     .backgroundColor($r('app.color.white'))
     .borderRadius(8)
     .clip(true)
+    .onClick(() => {
+      router.pushUrl({
+        url: "pages/GoodsPage",
+        params: this.goods
+      })
+    })
   }
 }

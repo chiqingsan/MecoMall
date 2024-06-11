@@ -4,7 +4,8 @@
   "dependencies": {
     "@abner/log": "^1.0.3",
     "@ohos/axios": "^2.2.0",
-    "@ohos/pulltorefresh": "^2.0.5"
+    "@ohos/pulltorefresh": "^2.0.5",
+    "@ohmos/sku": "^1.0.1"
   },
   "devDependencies": {
     "@ohos/hypium": "1.0.18",
