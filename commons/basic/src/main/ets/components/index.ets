@@ -7,3 +7,5 @@ export * from "./MkGoods"
 export * from "./MkGuess"
 
 export * from "./MkCell"
+
+export * from "./MkDialogLoading"

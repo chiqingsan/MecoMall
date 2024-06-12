@@ -1,4 +1,4 @@
-import { MkGoodsItem, MkGuess, MkNavbar } from '@mk/basic'
+import { MkDialogLoading, MkGoodsItem, MkGuess, MkNavbar } from '@mk/basic'
 import { router } from '@kit.ArkUI'
 import { Goods } from '../models'
 import { getDetailsApi } from '../apis'
@@ -13,12 +13,19 @@ export struct GoodsView {
   @State count: number = 1
   @State loading: boolean = false
   scroller = new Scroller()
+  // 其他略
+  dialog = new CustomDialogController({
+    builder: MkDialogLoading({ message: '拼命记载中' }),
+    customStyle: true,
+    alignment: DialogAlignment.Center
+  })
 
   async aboutToAppear() {
+    this.dialog.open()
     this.goods = router.getParams() as Goods
-
     const res = await getDetailsApi(this.goods.id)
     this.goods = res.data.result
+    this.dialog.close()
   }
 
   @Builder
