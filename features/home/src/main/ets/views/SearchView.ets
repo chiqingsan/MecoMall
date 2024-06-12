@@ -1,4 +1,6 @@
 import { router, window } from '@kit.ArkUI'
+import { windowManager } from '@mk/basic/Index'
+import { AudioSearchComp } from '../components/AudioSearchComp'
 
 @Component
 export struct SearchView {
@@ -6,17 +8,11 @@ export struct SearchView {
   @State keyword: string = ''
 
   aboutToAppear(): void {
-    window.getLastWindow(getContext())
-      .then((win) => {
-        win.setWindowSystemBarProperties({ statusBarContentColor: '#FFFFFF' })
-      })
+    windowManager.settingStatusBar(true)
   }
 
   aboutToDisappear(): void {
-    window.getLastWindow(getContext())
-      .then((win) => {
-        win.setWindowSystemBarProperties({ statusBarContentColor: '#000000' })
-      })
+    windowManager.settingStatusBar(false)
   }
 
   build() {
@@ -57,6 +53,8 @@ export struct SearchView {
       .padding({ top: this.safeTop, right: 16 })
       .linearGradient({ angle: 135, colors: [[$r('app.color.linear_begin'), 0], [$r('app.color.linear_end'), 1]] })
 
+
+      AudioSearchComp()
     }
   }
 }
