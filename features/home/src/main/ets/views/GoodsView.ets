@@ -3,16 +3,16 @@ import { router } from '@kit.ArkUI'
 import { Goods } from '../models'
 import { getDetailsApi } from '../apis'
 
-
 @Component
 export struct GoodsView {
-  @StorageProp('safeBottom') safeBottom: number = 0
+  @StorageProp('bottomHeight') safeBottom: number = 0
   @State goods: Goods = {} as Goods
   @State activeIndex: number = 0
   @State showSheet: boolean = false
   @State count: number = 1
   @State loading: boolean = false
   scroller = new Scroller()
+  navText: string[] = ['商品', '评价', '详情', '推荐',]
   // 其他略
   dialog = new CustomDialogController({
     builder: MkDialogLoading({ message: '拼命记载中' }),
@@ -48,6 +48,28 @@ export struct GoodsView {
     //     { name: '推荐' },
     //   ]
     // })
+    Row() {
+      ForEach(
+        this.navText,
+        (v: string, index) => {
+          Text(v)
+            .height("100%")
+            .padding({
+              left: 8,
+              right: 8,
+              top: 3,
+              bottom: 3
+            })
+            .fontSize(index === this.activeIndex ? 14 : 13)
+            .fontColor(index === this.activeIndex ? $r("app.color.black") : $r("app.color.gray"))
+            .onClick(() => {
+              this.activeIndex = index
+              this.scroller.scrollToIndex(index)
+            })
+        }
+      )
+    }.layoutWeight(1)
+
     Image($r('app.media.ic_public_shared'))
       .iconButton()
   }
@@ -93,13 +115,16 @@ export struct GoodsView {
           .alignItems(VerticalAlign.Bottom)
 
           Row({ space: 10 }) {
-            // MkCounter({
-            //   value: this.count, onInc: () => {
-            //     this.count++
-            //   }, onDec: () => {
-            //     this.count--
-            //   }
-            // })
+            Counter() {
+              Text(`${this.count}`)
+            }
+            .enableDec(this.count > 1)
+            .onInc(() => {
+              this.count++
+            })
+            .onDec(() => {
+              this.count--
+            })
 
             Text(`库存充足`)
               .fontSize(12)
