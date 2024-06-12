@@ -2,6 +2,7 @@ import { MkDialogLoading, MkGoodsItem, MkGuess, MkNavbar } from '@mk/basic'
 import { router } from '@kit.ArkUI'
 import { Goods } from '../models'
 import { getDetailsApi } from '../apis'
+import { HmSku, Sku } from '@ohmos/sku'
 
 @Component
 export struct GoodsView {
@@ -11,6 +12,7 @@ export struct GoodsView {
   @State showSheet: boolean = false
   @State count: number = 1
   @State loading: boolean = false
+  @State sku: HmSku = {} as HmSku
   scroller = new Scroller()
   navText: string[] = ['商品', '评价', '详情', '推荐',]
   // 其他略
@@ -77,7 +79,7 @@ export struct GoodsView {
   @Builder
   AddCartBuilder() {
     Column() {
-      Text('已选: ' + '')
+      Text('已选: ' + this.sku?.specsText?.split(",").join(" ") ?? "")
         .fontWeight(300)
         .width('100%')
         .fontColor($r('app.color.black'))
@@ -86,7 +88,7 @@ export struct GoodsView {
         .maxLines(1)
         .textOverflow({ overflow: TextOverflow.Ellipsis })
       Row({ space: 10 }) {
-        Image(this.goods.mainPictures?.[0])
+        Image(this.sku.picture || this.goods.mainPictures?.[0])
           .alt($r('app.media.ic_sku_img'))
           .width(80)
           .height(80)
@@ -98,11 +100,11 @@ export struct GoodsView {
               .fontSize(14)
               .fontColor($r('app.color.black'))
               .offset({ y: -4 })
-            Text(this.goods.price)
+            Text(this.sku.price || this.goods.price)
               .fontSize(24)
               .fontColor($r('app.color.black'))
               .fontWeight(500)
-            Text('原价¥' + (this.goods.price))
+            Text('原价¥' + (this.sku.oldPrice || this.goods.price))
               .fontSize(12)
               .fontColor($r('app.color.gray'))
               .margin({ left: 10 })
@@ -144,13 +146,14 @@ export struct GoodsView {
 
       List() {
         ListItem() {
-          // Sku({
-          //   specs: this.goods.specs,
-          //   skus: this.goods.skus,
-          //   onSkuChange: (sku: HmSku) => {
-          //     this.sku = sku
-          //   }
-          // })
+          Sku({
+            specs: this.goods.specs,
+            skus: this.goods.skus,
+            onSkuChange: (sku: HmSku) => {
+              this.sku = sku
+              // AlertDialog.show({ message: JSON.stringify(sku, null, 2) })
+            }
+          })
         }
       }
       .layoutWeight(1)

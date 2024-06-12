@@ -1,6 +1,20 @@
 {
   "app": {
-    "signingConfigs": [],
+    "signingConfigs": [
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "C:\\Users\\chiqingsan\\.ohos\\config\\default_MecoMall_qmpDRtQ6LgycqGDz2reaqEOYW7XMlDrujhlB5d_T348=.cer",
+          "storePassword": "0000001B8AE01114D8C95C22AEB4598939C7FFBF5A6202E58A68EE5681A51C7D6A665BE276FC33A939D8FA",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001B328AB00FDDA4B3D97A0CF883F4246323BA982E7150D225862C6F93A87D41B0CAF35695DF334D71",
+          "profile": "C:\\Users\\chiqingsan\\.ohos\\config\\default_MecoMall_qmpDRtQ6LgycqGDz2reaqEOYW7XMlDrujhlB5d_T348=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "C:\\Users\\chiqingsan\\.ohos\\config\\default_MecoMall_qmpDRtQ6LgycqGDz2reaqEOYW7XMlDrujhlB5d_T348=.p12"
+        }
+      }
+    ],
     "products": [
       {
         "name": "default",

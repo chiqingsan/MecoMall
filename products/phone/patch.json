@@ -1,7 +1,7 @@
 {
   "app": {
     "bundleName": "com.chiqingsan.micomall",
-    "patchVersionCode": 2000014,
+    "patchVersionCode": 2000015,
     "versionCode": 1000000
   },
   "module": {
