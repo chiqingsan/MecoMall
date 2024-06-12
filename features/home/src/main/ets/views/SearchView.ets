@@ -54,7 +54,18 @@ export struct SearchView {
       .linearGradient({ angle: 135, colors: [[$r('app.color.linear_begin'), 0], [$r('app.color.linear_end'), 1]] })
 
 
-      AudioSearchComp()
+      AudioSearchComp({
+        onChange: (keyword) => {
+          this.keyword = keyword
+        },
+        onComplete: (keyword) => {
+          this.keyword = keyword
+          router.pushUrl({
+            url: "pages/SearchResultPage",
+            params: { keyword }
+          })
+        }
+      })
     }
   }
 }

@@ -1,3 +1,4 @@
+import { Log } from '@abner/log';
 import { KeyboardAvoidMode, window } from '@kit.ArkUI';
 import { audio } from '@kit.AudioKit';
 import { speechRecognizer } from '@kit.CoreSpeechKit';
@@ -22,10 +23,82 @@ export struct AudioSearchComp {
 
   async startRecord() {
     this.voiceState = VoiceState.VOICING
+    Log.info("开始录音了...")
+    // 开始识别
+    this.asrEngine = await speechRecognizer.createEngine({
+      language: 'zh-CN',
+      online: 1
+    })
+    // 保存组件的 this，后续通过_this来使用组件
+    const _this = this
+    this.asrEngine.setListener({
+      onStart(sessionId: string, eventMessage: string) {
+        console.info(`onStart, sessionId: ${sessionId} eventMessage: ${eventMessage}`);
+      },
+      onEvent(sessionId: string, eventCode: number, eventMessage: string) {
+        console.info(`onEvent, sessionId: ${sessionId} eventCode: ${eventCode} eventMessage: ${eventMessage}`);
+      },
+      onResult(sessionId: string, result: speechRecognizer.SpeechRecognitionResult) {
+        console.info(`onResult, sessionId: ${sessionId} sessionId: ${JSON.stringify(result)}`);
+        _this.keyword = result.result
+        _this.onChange(result.result)
+      },
+      onComplete(sessionId: string, eventMessage: string) {
+        _this.voiceState = VoiceState.DEFAULT
+        _this.onComplete(_this.keyword)
+        console.info(`onComplete, sessionId: ${sessionId} eventMessage: ${eventMessage}`);
+      },
+      onError(sessionId: string, errorCode: number, errorMessage: string) {
+        console.error(`onError, sessionId: ${sessionId} errorCode: ${errorCode} errorMessage: ${errorMessage}`);
+      }
+    })
+    const recognizerParams: speechRecognizer.StartParams = {
+      sessionId: '10000',
+      audioInfo: {
+        audioType: 'pcm',
+        sampleRate: 16000,
+        soundChannel: 1,
+        sampleBit: 16
+      }
+    }
+    this.asrEngine?.startListening(recognizerParams)
+    // 开始录音
+    const audioStreamInfo: audio.AudioStreamInfo = {
+      samplingRate: audio.AudioSamplingRate.SAMPLE_RATE_16000,
+      channels: audio.AudioChannel.CHANNEL_1,
+      sampleFormat: audio.AudioSampleFormat.SAMPLE_FORMAT_S16LE,
+      encodingType: audio.AudioEncodingType.ENCODING_TYPE_RAW
+    }
+    const audioCapturerInfo: audio.AudioCapturerInfo = {
+      source: audio.SourceType.SOURCE_TYPE_MIC,
+      capturerFlags: 0
+    }
+    const audioCapturerOptions: audio.AudioCapturerOptions = {
+      streamInfo: audioStreamInfo,
+      capturerInfo: audioCapturerInfo
+    }
+
+    this.audioCapturer = await audio.createAudioCapturer(audioCapturerOptions)
+    this.audioCapturer.on('readData', (buffer) => {
+      console.log('mk-logger', buffer.byteLength)
+      this.asrEngine?.writeAudio('10000', new Uint8Array(buffer))
+    })
+    await this.audioCapturer.start()
+    this.voiceState = VoiceState.VOICING
   }
 
   async closeRecord() {
-    this.voiceState = VoiceState.VOICEOVER
+    this.audioCapturer?.stop()
+    this.audioCapturer?.release()
+    this.asrEngine?.finish('10000')
+    this.asrEngine?.cancel('10000')
+    this.asrEngine?.shutdown()
+    if (this.keyword) {
+      this.voiceState = VoiceState.DEFAULT
+      this.keyword = ''
+    } else {
+      this.voiceState = VoiceState.VOICEOVER
+    }
   }
 
   aboutToAppear(): void {
